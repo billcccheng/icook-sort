@@ -48,7 +48,8 @@ function readDocument(document) {
         var meta = bill_menu[0].getElementsByClassName("meta clearfix");
         var span_fav_count = meta[0].getElementsByClassName("fav-count recipe-favorites")[0];
         var vote = span_fav_count.getElementsByTagName("span")[0].childNodes[0].data
-        list_of_recipes[bill_link] = parseInt(vote);
+        if(parseInt(vote) !== 1)
+          list_of_recipes[bill_link] = parseInt(vote);
       }
       return list_of_recipes;
       });
