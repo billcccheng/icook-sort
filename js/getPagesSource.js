@@ -17,7 +17,7 @@ function readDocument(document) {
       return response.text();
     }).then((body)=>{
       let pageNum = pages.length + 1;
-      console.log("Geting " + pageNum + " page...");
+      console.log("Geting page " + pageNum + "...");
       let doc = parser.parseFromString(body, 'text/html');
       let next_page = doc.getElementsByClassName("next_page");
       return next_page.length === 0 ? Promise.reject("No Next Page"): next_page[0].children[0].href;
@@ -44,7 +44,8 @@ function readDocument(document) {
           let recipe_link = _recipes[i].getElementsByClassName("visible-xs")[0].href;
           let pull_left_class = _recipes[i].getElementsByClassName("pull-left");
           let data_recipe = JSON.parse(pull_left_class[0].childNodes[1].getAttribute("data-recipe")); 
-          let name = data_recipe["name"];
+          if(!data_recipe) continue;
+          let name = data_recipe["name"] ? data_recipe["name"] : "no name";
           //let image = data_recipe["cover"];
           let _menu = _recipes[i].getElementsByClassName("media-body card-info");
           let meta = _menu[0].getElementsByClassName("meta clearfix");
