@@ -1,53 +1,52 @@
-// @author Rob W <http://stackoverflow.com/users/938089/rob-w>
 chrome.runtime.sendMessage({
   action: "SendSource",
   source: readDocument(document)
 });
 
-
 function readDocument(document) {
-  var jq = document.createElement('script');
-  jq.src = "https://cdn.rawgit.com/github/fetch/master/fetch.js"
+  let fetchScript = document.createElement('script');
+  fetchScript.src = "https://cdn.rawgit.com/github/fetch/master/fetch.js"
   
-  var pages = [];
-  var link = "https://icook.tw/recipes/search?ingredients=&page=1&q=" + param;
-  getLink(link)
+  let pages = [];
+  let parser = new DOMParser();
+  let link = "https://icook.tw/recipes/search?ingredients=&page=1&q=" + param;
+  getLink(link);
   
   function getLink(link){
-    var pageNum = pages.length + 1;
-    console.log("Getting " + pageNum + " page");
     fetch(link, {credentials: "same-origin"}).then((response)=>{
       return response.text();
     }).then((body)=>{
-      document.body.innerHTML = body;
-      var next_page = document.getElementsByClassName("next_page");
-      var link = next_page.length === 0 ? Promise.reject(pages): next_page[0].children[0].href;
-      return link;
+      let pageNum = pages.length + 1;
+      console.log("Geting " + pageNum + " page...");
+      let doc = parser.parseFromString(body, 'text/html');
+      let next_page = doc.getElementsByClassName("next_page");
+      return next_page.length === 0 ? Promise.reject("No Next Page"): next_page[0].children[0].href;
     }).then((link)=>{
-      setTimeout(function(){
+      setTimeout(()=>{
         getLink(link);
         pages.push(link);
-      },10);
-      return pages;
-    }).catch((pages)=>{
+      },30);
+    }).catch((err)=>{
+      console.log(err);
       getCount();
     });
   }
   
   function getCount(){
-    var list_of_recipes = {};
+    let list_of_recipes = {};
     Promise.all(pages.map((link) => {
       return fetch(link, {credentials: "same-origin"}).then((res)=>{
         return res.text();
       }).then((body)=>{
-      document.body.innerHTML = body;
-      var bill_recipes = document.getElementsByClassName("media recipe-card list-card");
-      for(var i = 1; i < bill_recipes.length; i++){
-        var bill_menu = bill_recipes[i].getElementsByClassName("media-body card-info");
-        var bill_link = bill_recipes[i].getElementsByClassName("visible-xs")[0].href;
-        var meta = bill_menu[0].getElementsByClassName("meta clearfix");
-        var span_fav_count = meta[0].getElementsByClassName("fav-count recipe-favorites")[0];
-        var vote = span_fav_count.getElementsByTagName("span")[0].childNodes[0].data
+      let doc = parser.parseFromString(body, 'text/html');
+      let bill_recipes = doc.getElementsByClassName("media recipe-card list-card");
+      for(let i = 1; i < bill_recipes.length; i++){
+        let bill_menu = bill_recipes[i].getElementsByClassName("media-body card-info");
+        let bill_link = bill_recipes[i].getElementsByClassName("visible-xs")[0].href;
+        let meta = bill_menu[0].getElementsByClassName("meta clearfix");
+        let span_fav_count = meta[0].getElementsByClassName("fav-count recipe-favorites")[0];
+        let vote = span_fav_count.getElementsByTagName("span")[0].childNodes[0].data
+        vote = vote.replace(",", "");
         if(parseInt(vote) !== 1)
           list_of_recipes[bill_link] = parseInt(vote);
       }
@@ -59,7 +58,7 @@ function readDocument(document) {
   }
   
   function sortTheRecipes(list_of_recipes){
-    var recipeSort = [];
+    let recipeSort = [];
     for(recipe in list_of_recipes)
       recipeSort.push([recipe, list_of_recipes[recipe]]);
     recipeSort.sort((a,b)=>{
@@ -69,13 +68,13 @@ function readDocument(document) {
   }
   
   function loadTheResult(recipeSort){
-    document.body.style.padding = "50px";
-    document.body.innerHTML = '<ol>';
-
+    let list = ""
     recipeSort.map((recipe)=>{
-      document.body.innerHTML += '<li><a href=' + recipe[0] + '>' + recipe[0] + '</a>: ' + recipe[1] + '</li>';
+      let link = recipe[0];
+      let count = recipe[1];
+      list += '<li><a target="_blank" href=' + link + '>' + link + '</a>: ' + count + '</li>';
     });
-
-    document.body.innerHTML += '</ol>';
+    document.body.style.padding = "50px";
+    document.body.innerHTML = '<ol>' + list + '</ol>';
   }
 }

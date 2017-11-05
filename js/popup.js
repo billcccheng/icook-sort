@@ -1,6 +1,6 @@
 function runPlugin(keyword) {
   chrome.tabs.executeScript(null, {
-    code: 'var param = ' + JSON.stringify(keyword)
+    code: 'let param = ' + JSON.stringify(keyword)
   },function() {
     chrome.tabs.executeScript(null, {file: 'js/getPagesSource.js'});
   });
@@ -11,6 +11,6 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function submit(){
-  var keyword = document.getElementById("keyword").value;
+  let keyword = document.getElementById("keyword").value;
   window.onload = runPlugin(keyword);
 }
