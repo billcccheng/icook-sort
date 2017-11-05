@@ -38,19 +38,26 @@ function readDocument(document) {
       return fetch(link, {credentials: "same-origin"}).then((res)=>{
         return res.text();
       }).then((body)=>{
-      let doc = parser.parseFromString(body, 'text/html');
-      let bill_recipes = doc.getElementsByClassName("media recipe-card list-card");
-      for(let i = 1; i < bill_recipes.length; i++){
-        let bill_menu = bill_recipes[i].getElementsByClassName("media-body card-info");
-        let bill_link = bill_recipes[i].getElementsByClassName("visible-xs")[0].href;
-        let meta = bill_menu[0].getElementsByClassName("meta clearfix");
-        let span_fav_count = meta[0].getElementsByClassName("fav-count recipe-favorites")[0];
-        let vote = span_fav_count.getElementsByTagName("span")[0].childNodes[0].data
-        vote = vote.replace(",", "");
-        if(parseInt(vote) !== 1)
-          list_of_recipes[bill_link] = parseInt(vote);
-      }
-      return list_of_recipes;
+        let doc = parser.parseFromString(body, 'text/html');
+        let _recipes = doc.getElementsByClassName("media recipe-card list-card");
+        for(let i = 1; i < _recipes.length; i++){
+          let recipe_link = _recipes[i].getElementsByClassName("visible-xs")[0].href;
+          let pull_left_class = _recipes[i].getElementsByClassName("pull-left");
+          let data_recipe = JSON.parse(pull_left_class[0].childNodes[1].getAttribute("data-recipe")); 
+          let name = data_recipe["name"];
+          //let image = data_recipe["cover"];
+          let _menu = _recipes[i].getElementsByClassName("media-body card-info");
+          let meta = _menu[0].getElementsByClassName("meta clearfix");
+          let span_fav_count = meta[0].getElementsByClassName("fav-count recipe-favorites")[0];
+          let vote = span_fav_count.getElementsByTagName("span")[0].childNodes[0].data.replace(",", "");
+          let basicInfo = {};
+          basicInfo["vote"] = parseInt(vote);
+          basicInfo["link"] = recipe_link;
+          //basicInfo["image"] = image;
+          if(basicInfo["vote"] !== 1)
+            list_of_recipes[name] = basicInfo;
+        }
+        return list_of_recipes;
       });
     })).then(()=>{
       sortTheRecipes(list_of_recipes);
@@ -59,20 +66,20 @@ function readDocument(document) {
   
   function sortTheRecipes(list_of_recipes){
     let recipeSort = [];
-    for(recipe in list_of_recipes)
-      recipeSort.push([recipe, list_of_recipes[recipe]]);
+    for(name in list_of_recipes)
+      recipeSort.push([name, list_of_recipes[name]["vote"]]);
     recipeSort.sort((a,b)=>{
        return b[1] - a[1]; 
     });
-    loadTheResult(recipeSort);
+    loadTheResult(recipeSort, list_of_recipes);
   }
   
-  function loadTheResult(recipeSort){
+  function loadTheResult(recipeSort, list_of_recipes){
     let list = ""
     recipeSort.map((recipe)=>{
-      let link = recipe[0];
-      let count = recipe[1];
-      list += '<li><a target="_blank" href=' + link + '>' + link + '</a>: ' + count + '</li>';
+      let name = recipe[0];
+      let selectedRecipe = list_of_recipes[name];
+      list += '<li><a target="_blank" href=' + selectedRecipe["link"] + '>' + name + '</a>: ' + selectedRecipe["vote"] + '</li>';
     });
     document.body.style.padding = "50px";
     document.body.innerHTML = '<ol>' + list + '</ol>';

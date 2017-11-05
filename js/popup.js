@@ -1,6 +1,6 @@
 function runPlugin(keyword) {
   chrome.tabs.executeScript(null, {
-    code: 'let param = ' + JSON.stringify(keyword)
+    code: 'var param = ' + JSON.stringify(keyword)
   },function() {
     chrome.tabs.executeScript(null, {file: 'js/getPagesSource.js'});
   });
