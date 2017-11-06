@@ -92,8 +92,15 @@ function readDocument(document) {
   }
 
   function addStyleString(str) {
-    let css = document.createElement("style");
-    css.innerHTML = str;
-    document.body.appendChild(css);
+    head = document.head || document.getElementsByTagName('head')[0],
+    style = document.createElement('style');
+    style.type = 'text/css';
+    if (style.styleSheet){
+      style.styleSheet.cssText = str;
+    } else {
+      style.appendChild(document.createTextNode(str));
+    }
+
+    head.appendChild(style);
   }
 }
