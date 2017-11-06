@@ -16,44 +16,6 @@ body {
   text-align: center;
 }
 
-#signature {
-  color: black;
-  font: 10px 'Pacifico';
-  float: right;
-  margin-top: -15px;
-}
-
-#delete_all {
-  margin-bottom: 10px;
-  padding: 5px;
-  color: black;
-  background: #DC4C46;
-}
-
-#delete_all:hover {
-  color: white;
-}
-
-#save-message {
-  color: #DC4C46; 
-}
-
-#trash {
-  float: right;
-}
-
-a,a:visited,a:hover,a:active{
-  -webkit-backface-visibility:hidden;
-      backface-visibility:hidden;
-	position:relative;
-  transition:0.5s color ease;
-	text-decoration:none;
-	color:#81b3d2;
-}
-a:hover{
-	color:#d73444;
-}
-
 button {
   border: 2px solid #0a3c59;
   background: #FFFFA5;
@@ -89,59 +51,5 @@ button:hover {
   background: -o-linear-gradient(top, #6b6b6b, #5c5c5c);
   background-image: -ms-linear-gradient(top, #6b6b6b 0%, #5c5c5c 100%);
   color: #fff;
-}
-
-/* Dropdown Button */
-.dropbtn {
-  font-size: 12px;
-  width: 90%;
-  padding: 10px;
-  margin-bottom: 5px;
-  background-color: #efefef;
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
-  width: 33%;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  /*min-width: 200px;*/
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  border: solid;
-  margin-bottom: 30px;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  background: #FFFFA5;
-  padding: 5px;
-  margin: 5px;
-  display: block;
-  border-style: solid;
-  border-radius: 5px;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #FFFF00; 
-}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-  background-color: #3e8e41;
 }
 

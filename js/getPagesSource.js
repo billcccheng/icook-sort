@@ -46,7 +46,7 @@ function readDocument(document) {
           let data_recipe = JSON.parse(pull_left_class[0].childNodes[1].getAttribute("data-recipe")); 
           if(!data_recipe) continue;
           let name = data_recipe["name"] ? data_recipe["name"] : "no name";
-          //let image = data_recipe["cover"];
+          let image = data_recipe["cover"];
           let _menu = _recipes[i].getElementsByClassName("media-body card-info");
           let meta = _menu[0].getElementsByClassName("meta clearfix");
           let span_fav_count = meta[0].getElementsByClassName("fav-count recipe-favorites")[0];
@@ -54,7 +54,7 @@ function readDocument(document) {
           let basicInfo = {};
           basicInfo["vote"] = parseInt(vote);
           basicInfo["link"] = recipe_link;
-          //basicInfo["image"] = image;
+          basicInfo["image"] = image;
           if(basicInfo["vote"] !== 1)
             list_of_recipes[name] = basicInfo;
         }
@@ -76,13 +76,24 @@ function readDocument(document) {
   }
   
   function loadTheResult(recipeSort, list_of_recipes){
+    document.body.innerHTML = "";
+    addStyleString('img { display: none; }');
+    addStyleString('li a:hover + img { display: block; }');
     let list = ""
     recipeSort.map((recipe)=>{
       let name = recipe[0];
       let selectedRecipe = list_of_recipes[name];
-      list += '<li><a target="_blank" href=' + selectedRecipe["link"] + '>' + name + '</a>: ' + selectedRecipe["vote"] + '</li>';
+      //console.log(selectedRecipe["image"]);
+      list += '<li><a target="_blank" href=' + selectedRecipe["link"] + '>'+ name + '</a>: ' + selectedRecipe["vote"] +'<img src='+selectedRecipe["image"] + ' />'+ '</li>';
     });
+
     document.body.style.padding = "50px";
     document.body.innerHTML = '<ol>' + list + '</ol>';
+  }
+
+  function addStyleString(str) {
+    let css = document.createElement("style");
+    css.innerHTML = str;
+    document.body.appendChild(css);
   }
 }
