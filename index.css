@@ -1,7 +1,7 @@
 body {
   background: #A9A9A9;
   font-family: Gill Sans MT;
-  width: 400px;
+  width: 500px;
 }
 
 #title-section {
@@ -53,3 +53,10 @@ button:hover {
   color: #fff;
 }
 
+img { 
+  display: none; 
+}
+
+li a:hover + img { 
+	display: block; 
+}

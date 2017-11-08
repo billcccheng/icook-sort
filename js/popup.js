@@ -7,7 +7,8 @@ function runPlugin(keyword) {
 }
 chrome.runtime.onMessage.addListener(function(req, sender) {
   if (req.action == "getRecipeList") {
-    console.log(req.source);
+    let mainContent = document.getElementById("mainContent");
+    mainContent.innerHTML = '<ol>' + req.source + '</ol>';
   }
 });
 

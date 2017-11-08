@@ -2,9 +2,9 @@
   var fetchScript = document.createElement('script');
   fetchScript.src = "https://cdn.rawgit.com/github/fetch/master/fetch.js"
   
-  let pages = [];
-  let parser = new DOMParser();
-  let link = "https://icook.tw/recipes/search?ingredients=&page=1&q=" + param;
+  var pages = [];
+  var parser = new DOMParser();
+  var link = "https://icook.tw/recipes/search?ingredients=&page=1&q=" + param;
   getLink(link);
   
   function getLink(link){
