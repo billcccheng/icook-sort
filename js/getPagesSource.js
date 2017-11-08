@@ -1,10 +1,5 @@
-chrome.runtime.sendMessage({
-  action: "SendSource",
-  source: readDocument(document)
-});
-
-function readDocument(document) {
-  let fetchScript = document.createElement('script');
+//function readDocument(document) {
+  var fetchScript = document.createElement('script');
   fetchScript.src = "https://cdn.rawgit.com/github/fetch/master/fetch.js"
   
   let pages = [];
@@ -76,9 +71,6 @@ function readDocument(document) {
   }
   
   function loadTheResult(recipeSort, list_of_recipes){
-    document.body.innerHTML = "";
-    addStyleString('img { display: none; }');
-    addStyleString('li a:hover + img { display: block; }');
     let list = ""
     recipeSort.map((recipe)=>{
       let name = recipe[0];
@@ -87,20 +79,8 @@ function readDocument(document) {
       list += '<li><a target="_blank" href=' + selectedRecipe["link"] + '>'+ name + '</a>: ' + selectedRecipe["vote"] +'<img src='+selectedRecipe["image"] + ' />'+ '</li>';
     });
 
-    document.body.style.padding = "50px";
-    document.body.innerHTML = '<ol>' + list + '</ol>';
+    chrome.runtime.sendMessage({
+      action: "getRecipeList",
+      source: list 
+    });
   }
-
-  function addStyleString(str) {
-    head = document.head || document.getElementsByTagName('head')[0],
-    style = document.createElement('style');
-    style.type = 'text/css';
-    if (style.styleSheet){
-      style.styleSheet.cssText = str;
-    } else {
-      style.appendChild(document.createTextNode(str));
-    }
-
-    head.appendChild(style);
-  }
-}
