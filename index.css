@@ -6,10 +6,10 @@ body {
 
 #title-section {
   background: white;
-  padding: 5px;
+  padding: 2px;
   border-style: solid;
   border-color: #313131;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 #title {
@@ -55,11 +55,10 @@ button:hover {
 
 img { 
   display: none; 
-  max-width: 100%;
-  max-height: 100%;
 }
+
 li {
-  padding: 5px;
+  padding: 2px;
 }
 
 li a:hover + img { 
