@@ -1,4 +1,5 @@
 function runPlugin(keyword) {
+  document.getElementById("loader").style.display = "block";
   chrome.tabs.executeScript(null, {
     code: 'var param = ' + JSON.stringify(keyword)
   },function() {
@@ -7,6 +8,7 @@ function runPlugin(keyword) {
 }
 chrome.runtime.onMessage.addListener(function(req, sender) {
   if (req.action == "getRecipeList") {
+    document.getElementById("loader").style.display = "none";
     let mainContent = document.getElementById("mainContent");
     mainContent.innerHTML = '<ol>' + req.source + '</ol>';
   }
