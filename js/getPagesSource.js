@@ -5,6 +5,7 @@ fetchScript.src = "https://cdn.rawgit.com/github/fetch/master/fetch.js"
 var pages = [];
 var parser = new DOMParser();
 var link = "https://icook.tw/recipes/search?ingredients=&page=1&q=" + param;
+var totalPageCount = 0;
 getLink(link);
 
 function getLink(link){
@@ -15,6 +16,15 @@ function getLink(link){
     console.log("Geting page " + pageNum + "...");
     let doc = parser.parseFromString(body, 'text/html');
     let next_page = doc.getElementsByClassName("next_page");
+    if(totalPageCount === 0){
+      totalPageCount = doc.getElementsByClassName("recipe-total")[0].innerText;
+      totalPageCount = Math.ceil(parseInt(totalPageCount.replace(",",""))/12);
+    }
+    chrome.runtime.sendMessage({
+      action: "currPageNum",
+      currPageNum: pages.length,
+      totalPages: totalPageCount 
+    });
     return next_page.length === 0 ? Promise.reject("No Next Page"): next_page[0].children[0].href;
   }).then((link)=>{
     setTimeout(()=>{
@@ -75,7 +85,6 @@ function loadTheResult(recipeSort, list_of_recipes){
   recipeSort.map((recipe)=>{
     let name = recipe[0];
     let selectedRecipe = list_of_recipes[name];
-    //console.log(selectedRecipe["image"]);
     list += '<li><a target="_blank" href=' + selectedRecipe["link"] + '>'+ name + '</a>: ' + selectedRecipe["vote"] +'<img src='+selectedRecipe["image"] + ' />'+ '</li>';
   });
 
